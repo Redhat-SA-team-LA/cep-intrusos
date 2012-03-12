@@ -1,24 +1,51 @@
 package ar.gov.anses.seginf.intrusos.convert;
 
+import java.io.Serializable;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
-public class SyslogMessage{
+public class SyslogMessage extends BusinessObject implements Serializable{
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+//	CREATE TABLE syslogmessage (
+//		    id bigint NOT NULL,
+//		    createdat timestamp without time zone,
+//		    executed boolean NOT NULL,
+//		    facility character varying(255),
+//		    hostname character varying(255),
+//		    localaddress character varying(255),
+//		    logmessage character varying(2048),
+//		    remoteaddress character varying(255),
+//		    severity character varying(255),
+//		    "timestamp" timestamp without time zone,
+//		    valid boolean NOT NULL
+//		);
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -185301188423679119L;
+
+	@Column(nullable=true,length=255)
 	private String facility;
+	
+	@Column(nullable=true,length=255)
 	private String severity;
+	
+	@Column(nullable=true,length=255)
 	private String remoteAddress;
+	
+	@Column(nullable=true,length=255)
 	private String localAddress;
+	
+	@Column(nullable=true,length=255)
 	private String hostname;
+	
+	@Column(nullable=true,length=2048)
 	private String logMessage;
+	
 	private Date timestamp;
 	private Date createdAt;
 
@@ -81,13 +108,7 @@ public class SyslogMessage{
 		this.hostname = hostname;
 	}
 
-	public long getId() {
-		return id;
-	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public Date getCreatedAt() {
 		return createdAt;

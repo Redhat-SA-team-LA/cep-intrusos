@@ -45,9 +45,11 @@ public class Repository {
 
 	private void setUp() {
 
-//		if (!SystemProperties.getInstance().getValue("repository"))
-//			return;
-		Configuration configuration = new Configuration().configure(new File("/opt/rules/hibernate.cfg.xml"));
+		// if (!SystemProperties.getInstance().getValue("repository"))
+		// return;
+		Configuration configuration = new Configuration()
+				.configure(new File(
+						"/media/unique/workspace/redhat/cep-intrusos/rsyslog-server/src/main/java/hibernate.cfg.xml"));
 		configuration.addAnnotatedClass(SyslogMessage.class);
 
 		this.sessionFactory = configuration.buildSessionFactory();
@@ -55,8 +57,8 @@ public class Repository {
 
 	public void save(Object storable) {
 
-//		if (!SystemProperties.getInstance().getValue("repository"))
-//			return;
+		// if (!SystemProperties.getInstance().getValue("repository"))
+		// return;
 
 		try {
 			Session session = sessionFactory.openSession();

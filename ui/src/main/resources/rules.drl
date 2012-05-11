@@ -1,0 +1,30 @@
+package org.drools.examples.twittercbr
+import ar.gov.anses.seginf.intrusos.convert.*
+import ar.gov.anses.seginf.intrusos.notification.*
+import com.redhat.seginf.ui.mail.*
+import java.text.MessageFormat
+
+
+declare SyslogMessage
+    @role( event )
+    @timestamp( createdAt )
+    @expires( 10s )
+end
+
+
+
+
+rule ?ruleName
+no-loop true
+when
+	    $s : SyslogMessage(
+		    severity.toString matches ?severity,
+		    facility.toString matches ?facility,
+		    hostname.toString matches ?hostname,
+		    logMessage.toString matches ?logMessage
+	    ) from entry-point "syslog"
+
+then
+		MailManager.getInstance().enviarMail("adriel.paredes@gmail.com","hola","chau");
+end
+	

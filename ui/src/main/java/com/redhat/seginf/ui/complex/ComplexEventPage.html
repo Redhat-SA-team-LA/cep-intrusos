@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$("#hostname").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=systems"
+				})
+				$("#eventoa").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=eventos"
+				})
+				$("#eventob").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=eventos"
+				})
+				$("#tags").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=subsystems"
+				})
+				$.getJSON("rpcs/json.pgsql.php", {
+					where : "equipos"
+				}, function(j) {
+					var options = '';
+					for ( var i = 0; i < j.length; i++) {
+						options += '<option value="' + j[i].value + '">'
+								+ j[i].label + '</option>';
+					}
+					$("#notify").html(options);
+				})
+				$("#formElem").submit(function() {
+					$.ajax({
+						type : "POST",
+						url : "rpcs/json.pgsql.php?where=complex",
+						data : $("#formElem").serialize(),
+						dataType : "json",
+
+						success : function(msg) {
+							// $("#formResponse").removeClass('error');
+							// $("#formResponse").addClass('success');
+							// $("#formResponse").html('msg.message');
+							alert(msg);
+
+						},
+						error : function() {
+							//$("#formResponse").removeClass('success');
+							//$("#formResponse").addClass('error');
+							alert('Hubo un error creando la regla.');
+						}
+					});
+
+				});
+
+			})
+</script>
+</head>
+
+<body>
+	<wicket:extend>
+		<div id="content">
+			<h1>Nuevo Evento Complejo</h1>
+			<div id="wrapper">
+				<div id="steps">
+					<form id="formElem" name="formElem" action="" method="post">
+						<fieldset class="step">
+							<legend>Nombre</legend>
+							<p>
+								<label for="Nombre">Nombre</label> <input id="nombre"
+									name="nombre" AUTOCOMPLETE=OFF />
+							</p>
+						</fieldset>
+						<fieldset class="step">
+							<legend>Eventos</legend>
+
+							<p>
+								<label for="EventoA">Evento</label> <input id="eventoa"
+									name="eventoa" AUTOCOMPLETE=OFF />
+							</p>
+							<p>
+								<label for="EventoB">Seguido de:</label> <input id="eventob"
+									name="eventob" AUTOCOMPLETE=OFF />
+							</p>
+
+						</fieldset>
+						<fieldset class="step">
+							<legend>Rango</legend>
+							<p>
+								<label for="entre">Entre:</label> <input id="timeinitial"
+									name="timeinitial" type="number" AUTOCOMPLETE=OFF />
+							</p>
+							<p>
+								<label for="y">Y:</label> <input id="timefinal" name="timefinal"
+									type="number" AUTOCOMPLETE=OFF />
+							</p>
+							<label for="Segundos">Segundos</label>
+						</fieldset>
+						<fieldset class="step">
+							<legend>Notificaciones</legend>
+							<p>
+								<label for="notify">Equipo a notificar</label> <select
+									id="notify" name="notify">
+								</select>
+							</p>
+							<p>
+								<label for="notifytxt">Mensaje a Enviar</label> <input
+									id="notifytxt" name="notifytxt" type="text" AUTOCOMPLETE=OFF />
+							</p>
+						</fieldset>
+						<fieldset class="step">
+							<legend>Confirm</legend>
+							<p>Everything in the form was correctly filled if all the
+								steps have a green checkmark icon. A red checkmark icon
+								indicates that some field is missing or filled out with invalid
+								data. In this last step the user can confirm the submission of
+								the form.</p>
+							<p class="submit">
+								<button id="registerButton" type="submit">Register</button>
+							</p>
+						</fieldset>
+					</form>
+				</div>
+				<div id="navigation" style="display: none;">
+					<ul>
+						<li class="selected"><a href="#">Nombre</a></li>
+						<li><a href="#">Eventos</a></li>
+						<li><a href="#">Rango</a></li>
+						<li><a href="#">Notificación</a></li>
+						<li><a href="#">Confirmar</a></li>
+					</ul>
+				</div>
+			</div>
+			<div id="formResponse"></div>
+		</div>
+	</wicket:extend>
+</body>
+</html>

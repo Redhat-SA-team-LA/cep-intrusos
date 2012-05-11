@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>ANSES - Sistema de detecci&oacute;n de intrusiones</title>
+<link rel="stylesheet" type="text/css" href="css/anses.css" />
+<link rel="stylesheet" href="css/style.css" type="text/css"
+	media="screen" />
+<link rel="stylesheet" href="css/ui-lightness/jquery-ui-1.8.custom.css"
+	type="text/css" media="screen" />
+<style type="text/css">
+.success {
+	border: 2px solid #009400;
+	background: #B3FFB3;
+	color: #555;
+	font-weight: bold;
+}
+
+.error {
+	border: 2px solid #DE001A;
+	background: #FFA8B3;
+	color: #000;
+	font-weight: bold;
+}
+</style>
+
+<script type="text/javascript"
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="js/sliding.form.js"></script>
+<script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(
+			function() {
+				$("#hostname").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=systems"
+				})
+				$("#eventoa").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=eventos"
+				})
+				$("#eventob").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=eventos"
+				})
+				$("#tags").autocomplete({
+					minLength : 2,
+					source : "rpcs/json.pgsql.php?where=subsystems"
+				})
+				$.getJSON("rpcs/json.pgsql.php", {
+					where : "equipos"
+				}, function(j) {
+					var options = '';
+					for ( var i = 0; i < j.length; i++) {
+						options += '<option value="' + j[i].value + '">'
+								+ j[i].label + '</option>';
+					}
+					$("#notify").html(options);
+				})
+				$("#formElem").submit(function() {
+					$.ajax({
+						type : "POST",
+						url : "rpcs/json.pgsql.php?where=complex",
+						data : $("#formElem").serialize(),
+						dataType : "json",
+
+						success : function(msg) {
+							// $("#formResponse").removeClass('error');
+							// $("#formResponse").addClass('success');
+							// $("#formResponse").html('msg.message');
+							alert(msg);
+
+						},
+						error : function() {
+							//$("#formResponse").removeClass('success');
+							//$("#formResponse").addClass('error');
+							alert('Hubo un error creando la regla.');
+						}
+					});
+
+				});
+
+			})
+</script>
+</head>
+
+<body>
+	<wicket:extend>
+		<div id="content">
+			<h1>Obtener Reporte</h1>
+			<legend>Eventos</legend>
+
+			<p>
+				<label for="EventoA">Evento Simple:</label> <input id="eventoa"
+					name="eventoa" AUTOCOMPLETE=OFF />
+			</p>
+			<p>
+				<label for="EventoB">Evento Complejo:</label> <input id="eventob"
+					name="eventob" AUTOCOMPLETE=OFF />
+			</p>
+
+			<legend>Rango</legend>
+			<p>
+				<label for="entre">Fecha:</label> <input id="timeinitial"
+					name="timeinitial" AUTOCOMPLETE=OFF />
+			</p>
+			<p>
+				<label for="y">Rango:</label> <input id="timefinal" name="timefinal"
+					type="number" AUTOCOMPLETE=OFF />
+			</p>
+			<p class="submit">
+				<button id="registerButton" type="submit">Register</button>
+			</p>
+		</div>
+	</wicket:extend>
+</body>
+</html>
